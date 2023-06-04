@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { createExpressServer } from "routing-controllers";
-import { BusRouteController } from "./controllers/BusRoute.Controller";
-import { env } from "./env";
+import { BusRouteController } from "./controllers/Transit.Controller";
+import { env } from "./utils/env";
 
 const app = createExpressServer({
   routePrefix: "/api",

@@ -1,18 +1,27 @@
 import { Controller, Get, Param, UseBefore } from "routing-controllers";
 import { validate } from "../middlewares/validate";
-import { BusCompanySchema, getAllRoutesSchema } from "../schemas/bus.schema";
+import {
+  BusCompanySchema,
+  getAllRoutesSchema,
+} from "../schemas/transit.schema";
 import { z } from "zod";
 
-type BusCompany = "miway" | "brampton";
-
-@Controller("/route/:company")
+@Controller("/:company")
 export class BusRouteController {
-  @Get("/")
+  @Get("/route")
   @UseBefore(validate(getAllRoutesSchema))
   getAllRoutes(@Param("company") company: z.TypeOf<typeof BusCompanySchema>) {
     return {
       company: company,
       routes: [44, 110],
     };
+  }
+
+  @Get("/route/:route")
+  getRoute(
+    @Param("company") company: z.TypeOf<typeof BusCompanySchema>,
+    @Param("route") route: string
+  ) {
+    return { company, route: {} };
   }
 }
