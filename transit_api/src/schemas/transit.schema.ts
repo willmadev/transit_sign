@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const BusCompanySchema = z.union(
+export const BusAgencySchema = z.union(
   [z.literal("miway"), z.literal("brampton")],
   {
     required_error: "Bus company required",
@@ -9,5 +9,5 @@ export const BusCompanySchema = z.union(
 );
 
 export const getAllRoutesSchema = z.object({
-  params: z.object({ company: BusCompanySchema }),
+  params: z.object({ company: BusAgencySchema }),
 });

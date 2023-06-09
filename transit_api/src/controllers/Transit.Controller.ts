@@ -1,27 +1,33 @@
 import { Controller, Get, Param, UseBefore } from "routing-controllers";
 import { validate } from "../middlewares/validate";
-import {
-  BusCompanySchema,
-  getAllRoutesSchema,
-} from "../schemas/transit.schema";
+import { BusAgencySchema, getAllRoutesSchema } from "../schemas/transit.schema";
 import { z } from "zod";
+import { fetchGtfsFeed } from "../utils/decodeGtfs";
 
-@Controller("/:company")
+@Controller("/:agency")
 export class BusRouteController {
   @Get("/route")
   @UseBefore(validate(getAllRoutesSchema))
-  getAllRoutes(@Param("company") company: z.TypeOf<typeof BusCompanySchema>) {
+  getAllRoutes(@Param("agency") agency: z.TypeOf<typeof BusAgencySchema>) {
     return {
-      company: company,
+      agency,
       routes: [44, 110],
     };
   }
 
   @Get("/route/:route")
-  getRoute(
-    @Param("company") company: z.TypeOf<typeof BusCompanySchema>,
+  async getRoute(
+    @Param("agency") agency: z.TypeOf<typeof BusAgencySchema>,
     @Param("route") route: string
   ) {
-    return { company, route: {} };
+    const feed = await fetchGtfsFeed(
+      "https://www.miapp.ca/GTFS_RT/TripUpdate/TripUpdates.pb"
+    );
+    return {
+      agency,
+      route: feed.entity.filter(
+        (entity) => entity.tripUpdate?.trip.routeId == route
+      ),
+    };
   }
 }
