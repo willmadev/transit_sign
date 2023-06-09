@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  backend:
+    build: ./transit_api
+    ports:
+      - "5050:5050"
+    environment:
+      - PORT=5050
+    volumes:
+      - ./transit_api:/api
+    container_name: transit_api
+    restart: always
+    depends_on: 
+      - db
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    container_name: transit_db
+    restart: always
